@@ -1,7 +1,30 @@
 package main
 
 func main() {
+	hobbies := [3]string{"Excercice", "Coding", "Gaming"}
+	println(hobbies)
+	println(hobbies[0])
+	newList := hobbies[:2]
+	println(newList)
 
+	dynamicArray := []string{"Learn Go", "Learn Python"}
+	dynamicArray[1] = "Learn Java"
+	dynamicArray = append(dynamicArray, "Learn C++")
+
+	type product struct {
+		title    string
+		id       int
+		price    float64
+		createAt string
+	}
+
+	p := product{title: "Product Title", id: 1}
+	productList := []product{p}
+
+	productList = append(productList, product{title: "Product Title 2", id: 2})
+	productList = append(productList, product{title: "Product Title 3", id: 3})
+
+	println(p.title)
 }
 
 // Time to practice what you learned!
