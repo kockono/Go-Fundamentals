@@ -1,0 +1,2 @@
+# Get 1 Event by id
+GET http://localhost:8080/events/1
