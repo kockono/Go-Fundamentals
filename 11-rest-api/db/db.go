@@ -3,7 +3,7 @@ package db
 import (
 	"database/sql"
 
-	_ "github.com/mattn/go-sqlite3"
+	_ "modernc.org/sqlite"
 )
 
 // Permite tener una variable global para la conexión a la base de datos
@@ -11,16 +11,17 @@ var DB *sql.DB
 
 // DB is the database connection
 func InitDb() { // *sql.DB
-	_, err := sql.Open("sqlite3", "api.db")
+	var err error
+	DB, err = sql.Open("sqlite", "api.db")
 
 	if err != nil {
-		panic(err)
+		panic("Database could not connect: " + err.Error())
 	}
 
 	// Maneja la cantidad de conexiones abiertas que se pueden tener
 	DB.SetMaxOpenConns(10)
 	// Maneja la cantidad de conexiones inactivas que se pueden tener
-	DB.SetMaxIdleConns(5)
+	DB.SetMaxIdleConns(10)
 	createTables()
 	// return db
 }
