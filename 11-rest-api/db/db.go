@@ -55,9 +55,9 @@ func createTables() {
 	)
 	`
 	// Ejecuta la query
-	_, err := DB.Exec(createEventsTable)
+	_, err2 := DB.Exec(createEventsTable)
 
-	if err != nil {
+	if err2 != nil {
 		panic(err)
 	}
 
