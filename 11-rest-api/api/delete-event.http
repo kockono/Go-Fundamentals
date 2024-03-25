@@ -1,0 +1,2 @@
+# Eliminar 1 solo evento
+DELETE http://localhost:8080/events/1
