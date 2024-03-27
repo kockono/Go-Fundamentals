@@ -27,14 +27,11 @@ func InitDb() { // *sql.DB
 }
 
 func createTables() {
-	createUsersTable := `CREATE TABLE IF NOT EXISTS users (
+	createUsersTable := `
+	CREATE TABLE IF NOT EXISTS users (
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
-		name TEXT NOT NULL,
+		email TEXT NOT NULL UNIQUE,
 		password TEXT NOT NULL
-		date_time DATETIME NOT NULL
-		description TEXT NOT NULL,
-		location TEXT NOT NULL,
-		FORIEGN KEY (user_id) REFERENCES users(id)
 	)
 	`
 	// Ejecuta la query
@@ -51,13 +48,14 @@ func createTables() {
 		description TEXT NOT NULL,
 		location TEXT NOT NULL,
 		date_time DATETIME NOT NULL,
-		user_id INTEGER
+		user_id INTEGER,
+		FOREIGN  KEY (user_id) REFERENCES users(id)
 	)
 	`
 	// Ejecuta la query
-	_, err2 := DB.Exec(createEventsTable)
+	_, err = DB.Exec(createEventsTable)
 
-	if err2 != nil {
+	if err != nil {
 		panic(err)
 	}
 
