@@ -2,6 +2,6 @@ POST http://localhost:8080/signup
 content-type: application/json
 
 {
-  "email": "admin@gmai.com",
-  "password": "admin",
+  "email": "test@example.com",
+  "password": "test"
 }
