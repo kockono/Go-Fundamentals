@@ -16,10 +16,10 @@ type Event struct {
 	UserID      int
 }
 
-var events []Event = []Event{}
+// var events []Event = []Event{}
 
 // Atteched to Event
-func (e Event) Save() error {
+func (e *Event) Save() error {
 
 	query := `INSERT INTO events (title, description, location, date_time, user_id)
 	 VALUES (?, ?, ?, ?, ?)`
@@ -48,7 +48,9 @@ func GetAllEvents() ([]Event, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	defer rows.Close()
+
 	var events []Event
 	// Iterate over the rows
 	for rows.Next() {
@@ -65,7 +67,7 @@ func GetAllEvents() ([]Event, error) {
 	return events, nil
 }
 
-func GetEvent(id int64) (Event, error) {
+func GetEventById(id int64) (Event, error) {
 	query := `SELECT * FROM events WHERE id = ?`
 	row := db.DB.QueryRow(query, id)
 	var event Event
@@ -99,5 +101,35 @@ func (event Event) Delete() error {
 	}
 	defer stmt.Close()
 	_, err = stmt.Exec(event.ID)
+	return err
+}
+
+func (e *Event) Register(userId int64) error {
+	query := `INSERT INTO registrations(event_id, user_id) VALUES (?, ?)`
+	stmt, err := db.DB.Prepare(query)
+
+	if err != nil {
+		return err
+	}
+
+	defer stmt.Close()
+
+	_, err = stmt.Exec(e.ID, userId)
+
+	return err
+}
+
+func (e Event) CancelRegistration(userId int64) error {
+	query := "DELETE FROM registrations WHERE user_id = ? AND event_id = ?"
+	stmt, err := db.DB.Prepare(query)
+
+	if err != nil {
+		return err
+	}
+
+	defer stmt.Close()
+
+	_, err = stmt.Exec(e.ID, userId)
+
 	return err
 }
