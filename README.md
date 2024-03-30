@@ -1,8 +1,17 @@
-### Instalación
+### Instalation
 https://go.dev/dl/
 
-### Copilar código
+### Install packages
+```sh
+go get
+```
+
+### Copile code
 ```sh
 go run .
 ```
 
+### Dependencies
+- Gin
+- JWT
+- SqliteModern
