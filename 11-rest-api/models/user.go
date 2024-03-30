@@ -13,63 +13,49 @@ type User struct {
 	Password string `binding:"required"`
 }
 
-func (u *User) Save() error {
-	query := `INSERT INTO users (email, password) VALUES (?, ?)`
-	// Statement for prepare the query
+func (u User) Save() error {
+	query := "INSERT INTO users(email, password) VALUES (?, ?)"
 	stmt, err := db.DB.Prepare(query)
+
 	if err != nil {
 		return err
 	}
+
 	defer stmt.Close()
 
-	hashpassword, err := utils.HashPassword(u.Password)
+	hashedPassword, err := utils.HashPassword(u.Password)
+
 	if err != nil {
 		return err
 	}
 
-	u.Password = hashpassword
+	result, err := stmt.Exec(u.Email, hashedPassword)
 
-	result, err := stmt.Exec(u.Email, u.Password)
 	if err != nil {
 		return err
 	}
 
 	userId, err := result.LastInsertId()
+
 	u.ID = userId
 	return err
 }
 
-func (u *User) FindByEmail() error {
-	query := `SELECT id, email, password FROM users WHERE email = ?`
-	// Statement for prepare the query
-	stmt, err := db.DB.Prepare(query)
-	if err != nil {
-		return err
-	}
-	defer stmt.Close()
-
-	row := stmt.QueryRow(u.Email)
-	err = row.Scan(&u.ID, &u.Email, &u.Password)
-	return err
-}
-
-func (u User) ValidateCredentials() error {
-	query := `SELECT id, password FROM users WHERE email = ?`
-	// pasamos como parametro el email u.Email = ?
+func (u *User) ValidateCredentials() error {
+	query := "SELECT id, password FROM users WHERE email = ?"
 	row := db.DB.QueryRow(query, u.Email)
 
-	var retrivedPassword string
-	err := row.Scan(&u.ID, &retrivedPassword)
+	var retrievedPassword string
+	err := row.Scan(&u.ID, &retrievedPassword)
 
 	if err != nil {
-		return err
+		return errors.New("Credentials invalid")
 	}
 
-	// Comparamos la contraseña que nos pasan con la contraseña hasheada
-	passwordIsValid := utils.CheckPasswordHash(u.Password, retrivedPassword)
+	passwordIsValid := utils.CheckPasswordHash(u.Password, retrievedPassword)
 
 	if !passwordIsValid {
-		return errors.New("Crede")
+		return errors.New("Credentials invalid")
 	}
 
 	return nil
