@@ -11,14 +11,9 @@ import (
 func signup(context *gin.Context) {
 	var user models.User
 	err := context.ShouldBindJSON(&user) // Obtiene los datos del body
+
 	if err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
-	err = user.Save()
-	if err != nil {
-		context.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
