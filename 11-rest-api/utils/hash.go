@@ -3,11 +3,10 @@ package utils
 import "golang.org/x/crypto/bcrypt"
 
 func HashPassword(password string) (string, error) {
-
 	// bcrypt.DefaultCost: The complexity of the hashing algorithm
 	// Can put a number between 4 and 31
 	// The password can't be more than 72 characters
-	bytes, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
 	return string(bytes), err
 }
 
